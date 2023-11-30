@@ -14,7 +14,7 @@ from user.models import User
 
 class LoginView(BaseLoginView):
     model = User
-    template_name = 'users/login.html'
+    template_name = 'user/login.html'
     # success_url = reverse_lazy('mainapp:home')
 
 class LogoutView(BaseLogoutView):

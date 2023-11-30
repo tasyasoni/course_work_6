@@ -1,0 +1,43 @@
+{% extends 'mailier/base.html' %}
+{% block content%}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-5"></h1>
+</div>
+
+
+<div class="row px-5 ms-5">
+    <div class="col-10">
+        <a class="p-2 btn btn-outline-primary" href="{% url 'mailier:mailing_create' %}">Добавить
+                новую рассылку</a>
+    </div>
+</div>
+</p>
+<div class="container col-10">
+    <div class="card">
+        <div class="card-header text-center">
+            <h3>Список наших рассылок</h3>
+        </div>
+        <div class="card-body">
+            <div class="col-12">
+                <table class="table text-center">
+                    <tr>
+                        <th><h6>Название</h6></th>
+                        <th><h6>Время рассылки</h6></th>
+                        <th><h6>Периодичность</h6></th>
+                        <th><h6>Статус рассылки</h6></th>
+                    </tr>
+                    {% for object in object_list %}
+                    <tr>
+                        <td><h4>{{ object.time_mail }}</h4></td>
+                        <td><h4>{{ object.period_mail }}</h4></td>
+                        <td><h4>{{ object.status_mail }}</h4></td>
+                        <td><h4><a class="btn btn-lg btn-warning"
+                                   href="{% url 'mailier:mailing_update' object.pk %}">Изменить</a></h4></td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
