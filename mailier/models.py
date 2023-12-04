@@ -10,7 +10,7 @@ class Client(models.Model):
     comment = models.TextField(verbose_name='комментарий', **NULLABLE)
 
     def __str__(self):
-        return f"{self.name} {self.email}"
+        return f"{self.email}"
 
     class Meta:
         verbose_name = "клиент"
@@ -18,22 +18,43 @@ class Client(models.Model):
 
 
 class Mailing(models.Model):
-    time_mail = models.DateTimeField(verbose_name='время_рассылки')
-    period_mail = models.CharField(max_length=25, verbose_name='периодичность_рассылки')
-    status_mail = models.CharField(max_length=25, verbose_name='статус_рассылки')
+    DAILY = "Ежедневная"
+    WEEKLY = "Еженедельная"
+    MONTHLY = "Ежемесячная"
+
+    PERIODICITY_CHOICES = [
+        (DAILY, "Раз в день"),
+        (WEEKLY, "Раз в неделю"),
+        (MONTHLY, "Раз в месяц"),
+    ]
+
+    CREATED = 'Создана'
+    STARTED = 'Запущена'
+    COMPLETED = 'Завершена'
+
+    STATUS_CHOICES = [
+        (CREATED, "Создана"),
+        (STARTED, "Запущена"),
+        (COMPLETED, "Завершена"),
+    ]
+    period_mail = models.CharField(max_length=25, choices=PERIODICITY_CHOICES, verbose_name='периодичность_рассылки')
+    status_mail = models.CharField(max_length=25, choices=STATUS_CHOICES,verbose_name='статус_рассылки') #создана, запущена, выполнена
+    start_mail = models.DateTimeField(verbose_name='время начала рассылки', **NULLABLE)
+    end_mail = models.DateTimeField(verbose_name='время окончания рассылки', **NULLABLE)
     clients = models.ManyToManyField(Client, verbose_name='клиенты_рассылки')
 
+
     def __str__(self):
-        return f"{self.time_mail} {self.status_mail}"
+        return f"{self.period_mail}"
 
     class Meta:
-        verbose_name = "рассылка"
-        verbose_name_plural = "рассылки"
+        verbose_name = "параметры_рассылка"
+        verbose_name_plural = "параметры_рассылки"
 
 
 class Msg(models.Model):
-    header_mail = models.TextField(verbose_name='тема_письма')
-    body_mail = models.TextField(verbose_name='тело_письма')
+    header_mail = models.CharField(max_length=25, verbose_name='Тема_рассылки')
+    body_mail = models.TextField(verbose_name='Тело_рассылки')
     mailing_list = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='рассылка', **NULLABLE)
 
     def __str__(self):

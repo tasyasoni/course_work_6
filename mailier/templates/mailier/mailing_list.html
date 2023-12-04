@@ -22,17 +22,18 @@
                 <table class="table text-center">
                     <tr>
                         <th><h6>Название</h6></th>
-                        <th><h6>Время рассылки</h6></th>
+                        <th><h6>Время начала рассылки</h6></th>
                         <th><h6>Периодичность</h6></th>
                         <th><h6>Статус рассылки</h6></th>
                     </tr>
                     {% for object in object_list %}
                     <tr>
-                        <td><h4>{{ object.time_mail }}</h4></td>
-                        <td><h4>{{ object.period_mail }}</h4></td>
-                        <td><h4>{{ object.status_mail }}</h4></td>
-                        <td><h4><a class="btn btn-lg btn-warning"
-                                   href="{% url 'mailier:mailing_update' object.pk %}">Изменить</a></h4></td>
+                        <td><h8>{{ Msg.header_mail }}</h8></td>
+                        <td><h8>{{ object.start_mail }}</h8></td>
+                        <td><h8>{{ object.period_mail }}</h8></td>
+                        <td><h8>{{ object.status_mail }}</h8></td>
+                        <td><h8><a class="btn btn-warning"
+                                   href="{% url 'mailier:mailing_update' object.pk %}">Изменить</a></h8></td>
                         {% endfor %}
                     </tr>
                 </table>

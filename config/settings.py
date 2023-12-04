@@ -43,8 +43,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+
     'mailier',
     'user',
+    'blog',
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [
@@ -113,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-eu'
+LANGUAGE_CODE = 'en-en'
 
 TIME_ZONE = 'UTC'
 
@@ -152,12 +155,12 @@ EMAIL_HOST = 'smtp.yandex.ru'  #адрес почтового сервера т�
 EMAIL_PORT = 465  # порт
 EMAIL_USE_SSL = True
 
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  #почта С которой отправляются нотифаи
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')   #реальный пароль -закрыть для гитхаб, создать портальный пароль
+EMAIL_HOST_USER = 'Tasyasoni@yandex.ru' #почта С которой отправляются нотифаи
+EMAIL_HOST_PASSWORD = 'cvianphhncvicpyh'  #реальный пароль -закрыть для гитхаб, создать портальный пароль
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-SERVER_EMAIL = EMAIL_HOST_USER
-EMAIL_ADMIN = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = 'Tasyasoni@yandex.ru'
+SERVER_EMAIL = 'Tasyasoni@yandex.ru'
+EMAIL_ADMIN = 'Tasyasoni@yandex.ru'
 
 
 CASH_ENABLE = os.getenv('CASH_ENABLE')

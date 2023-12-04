@@ -23,16 +23,14 @@
                     <tr>
                         <th><h6>ФИО клиента</h6></th>
                         <th><h6>email клиента</h6></th>
-                        <th><h6>Комментарий</h6></th>
                         <th><h6>Исправить данные</h6></th>
                     </tr>
                     {% for object in object_list %}
                     <tr>
-                        <td><h4>{{ object.name }}</h4></td>
-                        <td><h4>{{ object.email }}</h4></td>
-                        <td><h4>{{ object.comment }}</h4></td>
-                        <td><h4><a class="btn btn-lg btn-warning"
-                                   href="{% url 'mailier:client_update' object.pk %}">Исправить</a></h4></td>
+                        <td><h8>{{ object.name }}</h8></td>
+                        <td><h8>{{ object.email }}</h8></td>
+                        <td><h8><a class="btn btn-warning"
+                                   href="{% url 'mailier:client_update' object.pk %}">Внести изменения</a></h8></td>
                         {% endfor %}
                     </tr>
                 </table>

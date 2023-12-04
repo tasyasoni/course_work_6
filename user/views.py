@@ -15,25 +15,29 @@ from user.models import User
 class LoginView(BaseLoginView):
     model = User
     template_name = 'user/login.html'
-    # success_url = reverse_lazy('mainapp:home')
+
+    def get_success_url(self):
+        return reverse('mailier:home')
 
 class LogoutView(BaseLogoutView):
     model = User
-    # success_url = reverse_lazy('mainapp:home')
+
+    def get_success_url(self):
+        return reverse('user:login')
 
 
 class RegisterView(CreateView):
     model = User
     form_class = UserRegisterForm
     template_name = 'user/register.html'
-    success_url = reverse_lazy('user:login')
+    success_url = reverse_lazy('mailier:home')
 
     def form_valid(self, form):
         new_user = form.save(commit=False)
         verification = gen_verify_code()
         new_user.email_verify = verification
         new_user.is_active = False  #делаем нового юзера неактивным
-        verification_url = f'http://127.0.0.1:8000/user/activate/{verification}'
+        verification_url = f'http://127.0.0.1:8000/user/user/activate/{verification}'
         send_mail(
             subject='Подтверждение адреса электронной почты',
             message=f'Для подтверждения вашей почты перейдите по ссылке: {verification_url}',
@@ -56,14 +60,14 @@ class ProfileView (UpdateView):
 
 
 def email_activate(request):
-    return render(request, "user/email_activate.html")
+    return render(request, "user/user/email_activate.html")
 
 
 def activate(request, uid):
     user = User.objects.filter(email_verify=int(uid)).first()
     user.is_active = True
     user.save()
-    return redirect(reverse('mailier:home'))
+    return redirect(reverse('user:login'))
 
 
 def restore_password(request):
@@ -80,7 +84,7 @@ def restore_password(request):
         user.set_password(new_password)
         user.save()
         return redirect(reverse('user:login'))
-    return render(request, "user/restore_password.html")
+    return render(request, "user/user/restore_password.html")
 
 
 def gen_verify_code():
