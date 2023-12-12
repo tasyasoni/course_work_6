@@ -10,11 +10,25 @@ class Client(models.Model):
     comment = models.TextField(verbose_name='комментарий', **NULLABLE)
 
     def __str__(self):
-        return f"{self.email}"
+        return f'{self.email}'
 
     class Meta:
         verbose_name = "клиент"
         verbose_name_plural = "клиенты"
+
+
+class Msg(models.Model):
+    header_mail = models.CharField(max_length=25, verbose_name='Тема_рассылки')
+    body_mail = models.TextField(verbose_name='Тело_рассылки')
+
+
+    def __str__(self):
+        return f"{self.header_mail} {self.body_mail}"
+
+    class Meta:
+        verbose_name = "сообщение"
+        verbose_name_plural = "сообщения"
+
 
 
 class Mailing(models.Model):
@@ -38,10 +52,11 @@ class Mailing(models.Model):
         (COMPLETED, "Завершена"),
     ]
     period_mail = models.CharField(max_length=25, choices=PERIODICITY_CHOICES, verbose_name='периодичность_рассылки')
-    status_mail = models.CharField(max_length=25, choices=STATUS_CHOICES,verbose_name='статус_рассылки') #создана, запущена, выполнена
+    status_mail = models.CharField(max_length=25, choices=STATUS_CHOICES, verbose_name='статус_рассылки') #создана, запущена, выполнена
     start_mail = models.DateTimeField(verbose_name='время начала рассылки', **NULLABLE)
     end_mail = models.DateTimeField(verbose_name='время окончания рассылки', **NULLABLE)
     clients = models.ManyToManyField(Client, verbose_name='клиенты_рассылки')
+    message = models.ForeignKey(Msg, default=None, **NULLABLE, verbose_name='текст_рассылки', on_delete=models.CASCADE)
 
 
     def __str__(self):
@@ -52,25 +67,13 @@ class Mailing(models.Model):
         verbose_name_plural = "параметры_рассылки"
 
 
-class Msg(models.Model):
-    header_mail = models.CharField(max_length=25, verbose_name='Тема_рассылки')
-    body_mail = models.TextField(verbose_name='Тело_рассылки')
-    mailing_list = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='рассылка', **NULLABLE)
-
-    def __str__(self):
-        return f"{self.header_mail} {self.body_mail}"
-
-    class Meta:
-        verbose_name = "сообщение"
-        verbose_name_plural = "сообщения"
-
 
 class Logfile(models.Model):
     time_log_send = models.DateTimeField(verbose_name='дата и время последней попытки')
     status_log = models.BooleanField(verbose_name='статус попытки')
     server_response = models.CharField(verbose_name='ответ почтового сервера', **NULLABLE)
     mailing_list = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='рассылка')
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='клиент рассылки')
+
 
     def __str__(self):
         return f"{self.time_log_send} {self.status_log}"

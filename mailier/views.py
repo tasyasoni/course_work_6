@@ -25,28 +25,27 @@ class ClientUpdateView(UpdateView):
 class ClientListView(ListView):
     model = Client
 
-
     def get_success_url(self):
         return reverse('mailier:client_list')
 
 
 class MailingCreateView(CreateView):
     model = Mailing
-    form_class = MailingForm
+    form_class = MsgForm
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        SubjectFormset = inlineformset_factory(Mailing, Msg, form=MsgForm, extra=0)
+        MsgFormset = inlineformset_factory(Msg, Mailing, extra=1, form=MailingForm)
         if self.request.method == 'POST':
-            context_data['formset'] = SubjectFormset(self.request.POST, instance=self.object)
+            context_data['formset'] = MsgFormset(self.request.POST)
         else:
-            context_data['formset'] = SubjectFormset(instance=self.object)
+            context_data['formset'] = MsgFormset()
         return context_data
+
 
     def form_valid(self, form):
         formset = self.get_context_data()['formset']
         self.object = form.save()
-        self.object.owner = self.request.user
         self.object.save()
         if formset.is_valid():
             formset.instance = self.object
@@ -62,21 +61,22 @@ class MailingCreateView(CreateView):
 
 class MailingUpdateView(UpdateView):
     model = Mailing
-    form_class = MailingForm
+    form_class = MsgForm
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        SubjectFormset = inlineformset_factory(Mailing, Msg, form=MsgForm, extra=0)
+        MsgFormset = inlineformset_factory(Msg, Mailing, extra=1, form=MailingForm)
+
         if self.request.method == 'POST':
-            context_data['formset'] = SubjectFormset(self.request.POST, instance=self.object)
+            context_data['formset'] = MsgFormset(self.request.POST)
         else:
-            context_data['formset'] = SubjectFormset(instance=self.object)
+            context_data['formset'] = MsgFormset()
+
         return context_data
 
     def form_valid(self, form):
         formset = self.get_context_data()['formset']
         self.object = form.save()
-        self.object.owner = self.request.user
         self.object.save()
         if formset.is_valid():
             formset.instance = self.object
@@ -90,6 +90,18 @@ class MailingUpdateView(UpdateView):
 
 class MailingListView(ListView):
     model = Mailing
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data(*args, **kwargs)
+
+        context_data['all'] = context_data['object_list'].count()
+        context_data['active'] = context_data['object_list'].filter(status_mail=Mailing.STARTED).count()
+
+        mailing_list = context_data['object_list'].prefetch_related('clients')
+        clients = set()
+        [[clients.add(client.email) for client in mailing.clients.all()] for mailing in mailing_list]
+        context_data['clients_count'] = len(clients)
+        return context_data
 
     def get_success_url(self):
         return reverse('mailier:home')
@@ -106,5 +118,4 @@ def home(request):
         'title': 'Mailier_store'
     }
     return render(request, 'mailier/home.html', context)
-
 

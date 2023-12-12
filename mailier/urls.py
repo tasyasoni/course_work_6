@@ -3,8 +3,8 @@ from django.views.decorators.cache import cache_page
 
 from mailier import views
 from mailier.apps import MailierConfig
-from mailier.views import ClientListView, ClientCreateView, ClientUpdateView, MailingCreateView, MailingUpdateView, \
-    MailingListView, MailingDeleteView
+from mailier.views import ClientListView, ClientCreateView, ClientUpdateView, \
+    MailingListView, MailingDeleteView, MailingCreateView, MailingUpdateView
 
 #from mailier.views import
 

@@ -1,5 +1,8 @@
 {% extends 'mailier/base.html' %}
 {% block content%}
+
+
+
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
     <h1 class="display-5"></h1>
 </div>
@@ -28,17 +31,46 @@
                     </tr>
                     {% for object in object_list %}
                     <tr>
-                        <td><h8>{{ Msg.header_mail }}</h8></td>
+                        <td><h8>{{ object.message.header_mail }}</h8></td>
                         <td><h8>{{ object.start_mail }}</h8></td>
                         <td><h8>{{ object.period_mail }}</h8></td>
                         <td><h8>{{ object.status_mail }}</h8></td>
-                        <td><h8><a class="btn btn-warning"
+                        <td><h8><a class="btn btn-success"
                                    href="{% url 'mailier:mailing_update' object.pk %}">Изменить</a></h8></td>
-                        {% endfor %}
+                        <td><h8><a class="btn btn-danger"
+                                   href="{% url 'mailier:mailing_delete' object.pk %}">Удалить </a></h8></td>
+                    {% endfor %}
                     </tr>
                 </table>
             </div>
         </div>
     </div>
 
-    {% endblock %}
+
+    <div class="container col-8 mt-2 mb-5">
+        <div class="card">
+            <div class="card-header text-center">
+                <h4>Статистика</h4>
+            </div>
+            <div class="card-body">
+                <div class="row text-center ">
+                    <div class="col-12">
+                        <table class="table">
+                            <tr>
+                                <th><h8>Количество рассылок</h8></th>
+                                <th><h8>Количество активных рассылок</h8></th>
+                                <th><h8>Количество уникальных клиентов</h8></th>
+                            </tr>
+                            <body>
+                            <tr>
+                                <td><h8>{{ all }}</h8></td>
+                                <td><h8>{{ active }}</h8></td>
+                                <td><h8>{{ clients_count }}</h8></td>
+                            </tr>
+                        </table>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

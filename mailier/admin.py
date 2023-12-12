@@ -23,7 +23,7 @@ class MailingAdmin(admin.ModelAdmin):
 
 @admin.register(Msg)
 class MsgAdmin(admin.ModelAdmin):
-    list_display = ('header_mail', 'body_mail', 'mailing_list',)
+    list_display = ('header_mail', 'body_mail',)
     list_filter = ('header_mail',)
     search_fields = ('header_mail',)
 
