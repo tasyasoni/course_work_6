@@ -9,6 +9,7 @@ class Blog(models.Model):
     picture = models.ImageField(upload_to = 'blog', verbose_name='картинка', **NULLABLE)
     public_sign = models.BooleanField(default=True, verbose_name='признак_публикации')
     number_of_views = models.IntegerField(default=0, verbose_name='количество просмотров')
+    public_data = models.DateTimeField(auto_now_add=True, verbose_name='дата создания')
 
 
     def __str__(self):

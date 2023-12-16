@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.forms import inlineformset_factory
 from mailier.forms import ClientForm, MailingForm, MsgForm
-from mailier.models import Client, Mailing, Msg
+from mailier.models import Client, Mailing, Msg, Logfile
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView
 
 
@@ -42,10 +42,10 @@ class MailingCreateView(CreateView):
             context_data['formset'] = MsgFormset()
         return context_data
 
-
     def form_valid(self, form):
         formset = self.get_context_data()['formset']
         self.object = form.save()
+        self.object.owner = self.request.user
         self.object.save()
         if formset.is_valid():
             formset.instance = self.object
@@ -77,6 +77,7 @@ class MailingUpdateView(UpdateView):
     def form_valid(self, form):
         formset = self.get_context_data()['formset']
         self.object = form.save()
+        self.object.owner = self.request.user
         self.object.save()
         if formset.is_valid():
             formset.instance = self.object
@@ -113,9 +114,18 @@ class MailingDeleteView(DeleteView):
     success_url = reverse_lazy('mailier:mailing_list')
 
 
+class LogfileListView(ListView):
+    model = Logfile
+
+    def get_success_url(self):
+        return reverse('mailier:mailing_list')
+
 def home(request):
     context = {
         'title': 'Mailier_store'
     }
     return render(request, 'mailier/home.html', context)
+
+
+
 

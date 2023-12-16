@@ -37,9 +37,9 @@ class Mailing(models.Model):
     MONTHLY = "Ежемесячная"
 
     PERIODICITY_CHOICES = [
-        (DAILY, "Раз в день"),
-        (WEEKLY, "Раз в неделю"),
-        (MONTHLY, "Раз в месяц"),
+        (DAILY, "Ежедневная"),
+        (WEEKLY, "Еженедельная"),
+        (MONTHLY, "Ежемесячная"),
     ]
 
     CREATED = 'Создана'

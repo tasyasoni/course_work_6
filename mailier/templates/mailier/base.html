@@ -34,6 +34,7 @@
         <a class="p-2 btn btn-outline-primary" href="{% url 'mailier:mailing_list' %}">Рассылки</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'mailier:client_list' %}">Клиенты</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blog_list' %}">Блог</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'mailier:logfile_list' %}">Логи</a>
         </p>
         {% if user.is_authenticated %}
         <a class="p-2 btn btn-outline-primary" href="{% url 'user:profile' %}">Мой профиль: <font color="green" size = '3'> {{user}}</font></a>

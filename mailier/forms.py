@@ -1,7 +1,6 @@
-from django import forms
 from django.forms import ModelForm
 from django.urls import reverse_lazy
-from mailier.models import Client, Mailing, Msg
+from mailier.models import Client, Mailing, Msg, Logfile
 
 
 class ClientForm(ModelForm):
@@ -21,3 +20,9 @@ class MsgForm(ModelForm):
    class Meta:
         model = Msg
         fields = ('header_mail', 'body_mail',)
+
+
+class LogfileForm(ModelForm):
+    class Meta:
+        model = Logfile
+        fields = ('time_log_send', 'status_log', 'server_response',)

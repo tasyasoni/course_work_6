@@ -37,8 +37,10 @@
                         <td><h8>{{ object.status_mail }}</h8></td>
                         <td><h8><a class="btn btn-success"
                                    href="{% url 'mailier:mailing_update' object.pk %}">Изменить</a></h8></td>
+                        {% if not user.is_staff %}
                         <td><h8><a class="btn btn-danger"
                                    href="{% url 'mailier:mailing_delete' object.pk %}">Удалить </a></h8></td>
+                        {% endif %}
                     {% endfor %}
                     </tr>
                 </table>

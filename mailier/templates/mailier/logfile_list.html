@@ -1,0 +1,35 @@
+{% extends 'mailier/base.html' %}
+{% block content%}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-5"></h1>
+</div>
+
+
+</p>
+<div class="container col-10">
+    <div class="card">
+        <div class="card-header text-center">
+            <h3>Логи</h3>
+        </div>
+        <div class="card-body">
+            <div class="col-12">
+                <table class="table text-center">
+                    <tr>
+                        <th><h6>Рассылка</h6></th>
+                        <th><h6>Дата отправки</h6></th>
+                        <th><h6>Статус</h6></th>
+                        <th><h6>Ответ сервера</h6></th>
+                    </tr>
+                    {% for object in object_list %}
+                    <tr>
+                        <td><h8>{{ object.mailing_list.message.header_mail }}</h8></td>
+                        <td><h8>{{ object.time_log_send }}</h8></td>
+                        <td><h8>{{ object.status_log }}</h8></td>
+                        <td><h8>{{ object.server_response }}</h8></td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
