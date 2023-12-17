@@ -31,9 +31,11 @@
     <h5 class="my-0 mr-md-auto font-weight-normal">Mailier_store</h5>
     <nav class="ms-5">
         <a class="p-2 btn btn-outline-primary" href="{% url 'mailier:home' %}">Домой</a>
-        <a class="p-2 btn btn-outline-primary" href="{% url 'mailier:mailing_list' %}">Рассылки</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'mailier:client_list' %}">Клиенты</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blog_list' %}">Блог</a>
+        </p>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'mailier:msg_list' %}">Шаблоны</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'mailier:mailing_list' %}">Рассылки</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'mailier:logfile_list' %}">Логи</a>
         </p>
         {% if user.is_authenticated %}

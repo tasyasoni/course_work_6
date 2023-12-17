@@ -7,12 +7,15 @@ from django_apscheduler import util
 
 @util.close_old_connections
 def daily_mail():
-    mailings = Mailing.objects.filter(period_mail='Ежедневная', status_mail='Создана')
+    mailings = Mailing.objects.filter(period_mail='Ежедневная').exclude(status_mail=Mailing.STARTED)
     if not mailings.exists():
         return
     for mailing in mailings:
         now = timezone.localtime(timezone.now())
         if mailing.start_mail <= now <= mailing.end_mail:
+            mailing.status_mail = Mailing.STARTED
+            mailing.save()
+
             try:
                 send_mail(
                     subject=mailing.message.header_mail,
@@ -21,9 +24,7 @@ def daily_mail():
                     recipient_list=mailing.clients.values_list('email', flat=True),
                     fail_silently=False,
                 )
-                mailing.status_mail = Mailing.STARTED
-                mailing.save()
-                print('рассылка запущена')
+
             except Exception as error:
                 mailing.logfile_set.create(time_log_send=timezone.now(),
                                            status_log=False,
@@ -34,11 +35,11 @@ def daily_mail():
                                            server_response='OK')
                 mailing.status_mail = Mailing.COMPLETED
                 mailing.save()
-                print("рассылка выполнена")
+
 
 @util.close_old_connections
 def weekly_mail():
-    mailings = Mailing.objects.filter(period_mail='Еженедельная', status_mail='Создана')
+    mailings = Mailing.objects.filter(period_mail='Еженедельная').exclude(status_mail=Mailing.STARTED)
     if not mailings.exists():
         return
     for mailing in mailings:
@@ -54,7 +55,7 @@ def weekly_mail():
                 )
                 mailing.status_mail = Mailing.STARTED
                 mailing.save()
-                print('рассылка запущена')
+
             except Exception as error:
                 mailing.logfile_set.create(time_log_send=timezone.now(),
                                            status_log=False,
@@ -65,12 +66,12 @@ def weekly_mail():
                                            server_response='OK')
                 mailing.status_mail = Mailing.COMPLETED
                 mailing.save()
-                print("рассылка выполнена")
+
 
 
 @util.close_old_connections
 def mounthly_mail():
-    mailings = Mailing.objects.filter(period_mail='Ежемесячная', status_mail='Создана')
+    mailings = Mailing.objects.filter(period_mail='Ежемесячная').exclude(status_mail=Mailing.STARTED)
     if not mailings.exists():
         return
     for mailing in mailings:
@@ -86,7 +87,7 @@ def mounthly_mail():
                 )
                 mailing.status_mail = Mailing.STARTED
                 mailing.save()
-                print('рассылка запущена')
+
             except Exception as error:
                 mailing.logfile_set.create(time_log_send=timezone.now(),
                                            status_log=False,
@@ -97,4 +98,3 @@ def mounthly_mail():
                                            server_response='OK')
                 mailing.status_mail = Mailing.COMPLETED
                 mailing.save()
-                print("рассылка выполнена")

@@ -1,57 +1,43 @@
-from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.forms import inlineformset_factory
-from mailier.forms import ClientForm, MailingForm, MsgForm
+from blog.models import Blog
+from mailier.forms import ClientForm, MailingForm, MsgForm, ModeratorMailingForm
 from mailier.models import Client, Mailing, Msg, Logfile
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView
 
 
-class ClientCreateView(CreateView):
+class ClientCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Client
     form_class = ClientForm
-
+    permission_required = 'mailier.add_client'
     def get_success_url(self):
         return reverse('mailier:client_list')
 
 
-class ClientUpdateView(UpdateView):
+class ClientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Client
     form_class = ClientForm
+    permission_required = 'mailier.change_client'
 
     def get_success_url(self):
         return reverse('mailier:client_list')
 
 
-class ClientListView(ListView):
+class ClientListView(LoginRequiredMixin, ListView):
     model = Client
+    permission_required = 'mailier.view_client'
 
     def get_success_url(self):
         return reverse('mailier:client_list')
 
 
-class MailingCreateView(CreateView):
+class MailingCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Mailing
-    form_class = MsgForm
+    form_class = MailingForm
+    permission_required = 'mailier.add_mailing'
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        MsgFormset = inlineformset_factory(Msg, Mailing, extra=1, form=MailingForm)
-        if self.request.method == 'POST':
-            context_data['formset'] = MsgFormset(self.request.POST)
-        else:
-            context_data['formset'] = MsgFormset()
-        return context_data
-
-    def form_valid(self, form):
-        formset = self.get_context_data()['formset']
-        self.object = form.save()
-        self.object.owner = self.request.user
-        self.object.save()
-        if formset.is_valid():
-            formset.instance = self.object
-            formset.save()
-
-        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('mailier:mailing_list')
@@ -59,59 +45,72 @@ class MailingCreateView(CreateView):
 
 
 
-class MailingUpdateView(UpdateView):
+class MailingUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Mailing
-    form_class = MsgForm
+    form_class = MailingForm
+    permission_required = 'mailier.change_mailing'
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        MsgFormset = inlineformset_factory(Msg, Mailing, extra=1, form=MailingForm)
+    def get_form_class(self):
+        user = self.request.user
 
-        if self.request.method == 'POST':
-            context_data['formset'] = MsgFormset(self.request.POST)
+        if user.is_staff:
+            form_class = ModeratorMailingForm
         else:
-            context_data['formset'] = MsgFormset()
-
-        return context_data
-
-    def form_valid(self, form):
-        formset = self.get_context_data()['formset']
-        self.object = form.save()
-        self.object.owner = self.request.user
-        self.object.save()
-        if formset.is_valid():
-            formset.instance = self.object
-            formset.save()
-
-        return super().form_valid(form)
+            form_class = MailingForm
+        return form_class
 
     def get_success_url(self):
         return reverse('mailier:mailing_list')
 
 
-class MailingListView(ListView):
+class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
+    permission_required = 'mailier.view_mailing'
 
-    def get_context_data(self, *args, **kwargs):
-        context_data = super().get_context_data(*args, **kwargs)
-
-        context_data['all'] = context_data['object_list'].count()
-        context_data['active'] = context_data['object_list'].filter(status_mail=Mailing.STARTED).count()
-
-        mailing_list = context_data['object_list'].prefetch_related('clients')
-        clients = set()
-        [[clients.add(client.email) for client in mailing.clients.all()] for mailing in mailing_list]
-        context_data['clients_count'] = len(clients)
-        return context_data
 
     def get_success_url(self):
         return reverse('mailier:home')
 
 
 
-class MailingDeleteView(DeleteView):
+class MailingDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Mailing
     success_url = reverse_lazy('mailier:mailing_list')
+    permission_required = 'mailier.delete_mailing'
+
+
+class MsgCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = Msg
+    form_class = MsgForm
+    permission_required = 'mailier.add_msg'
+
+    def get_success_url(self):
+        return reverse('mailier:msg_list')
+
+
+class MsgUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = Msg
+    form_class = MsgForm
+    permission_required = 'mailier.change_msg'
+
+
+
+    def get_success_url(self):
+        return reverse('mailier:msg_list')
+
+
+class MsgListView(LoginRequiredMixin, ListView):
+    model = Msg
+    permission_required = 'mailier.view_msg'
+
+    def get_success_url(self):
+        return reverse('mailier:home')
+
+
+class MsgDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = Msg
+    success_url = reverse_lazy('mailier:Msg_list')
+    permission_required = 'mailier.delete_msg'
 
 
 class LogfileListView(ListView):
@@ -121,9 +120,20 @@ class LogfileListView(ListView):
         return reverse('mailier:mailing_list')
 
 def home(request):
+    qs = Mailing.objects.all()
+    qc = Client.objects.all()
+    bl = Blog.objects.all()
+
+
+
     context = {
-        'title': 'Mailier_store'
+        'title': 'Mailier_store',
+        'all': qs.count(),
+        'active': qs.filter(status_mail=Mailing.STARTED).count(),
+        'unic_clients': qc.count(),
+        'blog': bl.order_by('?')[:3]
     }
+
     return render(request, 'mailier/home.html', context)
 
 

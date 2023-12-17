@@ -57,6 +57,7 @@ class Mailing(models.Model):
     end_mail = models.DateTimeField(verbose_name='время окончания рассылки', **NULLABLE)
     clients = models.ManyToManyField(Client, verbose_name='клиенты_рассылки')
     message = models.ForeignKey(Msg, default=None, **NULLABLE, verbose_name='текст_рассылки', on_delete=models.CASCADE)
+    owner = models.ForeignKey('user.User', on_delete=models.SET_NULL, verbose_name='id_пользователя', **NULLABLE)
 
 
     def __str__(self):

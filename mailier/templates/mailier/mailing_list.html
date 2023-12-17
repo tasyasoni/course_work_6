@@ -10,8 +10,10 @@
 
 <div class="row px-5 ms-5">
     <div class="col-10">
+        {% if not user.is_staff %}
         <a class="p-2 btn btn-outline-primary" href="{% url 'mailier:mailing_create' %}">Добавить
                 новую рассылку</a>
+        {% endif%}
     </div>
 </div>
 </p>
@@ -47,32 +49,4 @@
             </div>
         </div>
     </div>
-
-
-    <div class="container col-8 mt-2 mb-5">
-        <div class="card">
-            <div class="card-header text-center">
-                <h4>Статистика</h4>
-            </div>
-            <div class="card-body">
-                <div class="row text-center ">
-                    <div class="col-12">
-                        <table class="table">
-                            <tr>
-                                <th><h8>Количество рассылок</h8></th>
-                                <th><h8>Количество активных рассылок</h8></th>
-                                <th><h8>Количество уникальных клиентов</h8></th>
-                            </tr>
-                            <body>
-                            <tr>
-                                <td><h8>{{ all }}</h8></td>
-                                <td><h8>{{ active }}</h8></td>
-                                <td><h8>{{ clients_count }}</h8></td>
-                            </tr>
-                        </table>
-                    </div>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}

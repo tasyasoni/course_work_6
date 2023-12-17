@@ -1,0 +1,50 @@
+{% extends 'mailier/base.html' %}
+{% block content%}
+
+
+
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-5"></h1>
+</div>
+
+
+<div class="row px-5 ms-5">
+    <div class="col-10">
+        {% if not user.is_staff %}
+        <a class="p-2 btn btn-outline-primary" href="{% url 'mailier:msg_create' %}">Добавить
+                новый шаблон рассылки</a>
+        {% endif%}
+    </div>
+</div>
+</p>
+<div class="container col-10">
+    <div class="card">
+        <div class="card-header text-center">
+            <h3>Список наших шаблонов </h3>
+        </div>
+        <div class="card-body">
+            <div class="col-12">
+                <table class="table text-center">
+                    <tr>
+                        <th><h6>Название</h6></th>
+                        <th><h6>Текст шаблона</h6></th>
+
+                    </tr>
+                    {% for object in object_list %}
+                    <tr>
+                        <td><h8>{{ object.header_mail }}</h8></td>
+                        <td><h8>{{ object.body_mail }}</h8></td>
+                        {% if not user.is_staff %}
+                        <td><h8><a class="btn btn-success"
+                                   href="{% url 'mailier:msg_update' object.pk %}">Изменить</a></h8></td>
+
+                        <td><h8><a class="btn btn-danger"
+                                   href="{% url 'mailier:msg_delete' object.pk %}">Удалить </a></h8></td>
+                        {% endif %}
+                    {% endfor %}
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

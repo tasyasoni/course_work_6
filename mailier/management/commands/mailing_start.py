@@ -18,7 +18,7 @@ class Command(BaseCommand):
 
         scheduler.add_job(
             daily_mail,
-            trigger=CronTrigger(minute="*/1"),
+            trigger=CronTrigger(day="*/1"),
             id="daily_job",
             max_instances=1,
             replace_existing=True,

@@ -6,43 +6,83 @@
     <p class="lead">Mailier_store - это отличный вариант создания рассылок и уведомления большого числа клиентов</p>
 </div>
 
-<div class="container">
-    <div class="row text-center">
-        <div class="col-4">
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Еженедельная подписка</h4>
-                </div>
+ <main>
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm border-primary">
+          <div class="card-header py-3 text-white bg-primary border-primary">
+            <h4 class="my-0 fw-normal">Еженедельная подписка</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">200 RUB<small class="text-muted fw-light">/нед</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>- 3 формата </li>
+              <li>- 50 клиентов </li>
+              <li>- 1 еженедельная рассылка </li>
+              <li>- 5 разовых рассылок</li>
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-outline-primary">Купить</button>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-6 rounded-3 shadow-sm">
+          <div class="card-header py-2">
+            <h4 class="my-0 fw-normal">Наш блог</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title"><small class="text-muted fw-light"></small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              {% for data in blog %}
                 <div class="card-body">
-                    <h1 class="card-title pricing-card-title">200 RUB</h1>
-                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                        <li>- 3 формата </li>
-                        <li>- 50 клиентов </li>
-                        <li>- 1 еженедельная рассылка </li>
-                        <li>- 5 разовых рассылок</li>
-                    </ul>
-                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>
-                </div>
-            </div>
-
-
-
+                    </div>
+                  <img class="card-img-top"
+                     src="/media/{{ data.picture }}">
+                     <alt="Card image cap">
+                    <p class="card-text">{{ data|title }}.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a class="p-1 btn btn-outline-primary"></a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </ul>
+            <button type="button"></button>
+                    <a class="w-100 btn btn-lg btn-primary" href="{% url 'blog:blog_list' %}">Прочитать статьи в блоге</a>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm border-primary">
+          <div class="card-header py-3 text-white bg-primary border-primary">
+           <h4 class="my-0 fw-normal">Ежемесячная подписка</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">600 RUB<small class="text-muted fw-light">/мес</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>- 9 формата </li>
+              <li>- 100 клиентов </li>
+              <li>- 5 еженедельная рассылка </li>
+              <li>- 10 разовых рассылок</li>
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-outline-primary">Купить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+ <div class="container">
+    <div class="row text-center">
+        <div class="col-12">
             <div class="card mb-4 box-shadow">
                 <div class="card-header">
                     <h4 class="my-0 font-weight-normal">Статистика</h4>
                 </div>
                 <div class="card-body">
                     <h1 class="card-title pricing-card-title"></h1>
-                    <ul class="table">
-                        <tr>
-                        <td><h8>{{ mailing.object.all }}</h8></td>
-                        <li>- {{ mailing.object.all }} </li>
-                        <li>- 50 клиентов </li>
-                        <li>- 1 еженедельная рассылка </li>
-                        <li>- 5 разовых рассылок</li>
-
-                    </ul>
-                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>
+                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                        <li> Рассылок - {{ all }} </li>
+                        <li> Активных рассылок - {{ active }} </li>
+                        <li> У нас клиентов - {{ unic_clients}} </li>
                 </div>
             </div>
         </div>
