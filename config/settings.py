@@ -89,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'coursework_6',
         'USER': 'postgres',
-        'PASSWORD': 'Antoniya2308'
+        'PASSWORD': os.getenv('PASSWORD')
     }
 }
 
@@ -155,12 +155,12 @@ EMAIL_HOST = 'smtp.yandex.ru'  #адрес почтового сервера т�
 EMAIL_PORT = 465  # порт
 EMAIL_USE_SSL = True
 
-EMAIL_HOST_USER = 'Tasyasoni@yandex.ru' #почта С которой отправляются нотифаи
-EMAIL_HOST_PASSWORD = 'cvianphhncvicpyh'  #реальный пароль -закрыть для гитхаб, создать портальный пароль
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER') #почта С которой отправляются нотифаи
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  #реальный пароль -закрыть для гитхаб, создать портальный пароль
 
-DEFAULT_FROM_EMAIL = 'Tasyasoni@yandex.ru'
-SERVER_EMAIL = 'Tasyasoni@yandex.ru'
-EMAIL_ADMIN = 'Tasyasoni@yandex.ru'
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
+SERVER_EMAIL = os.getenv('EMAIL_HOST_USER')
+EMAIL_ADMIN = os.getenv('EMAIL_HOST_USER')
 
 
 CASH_ENABLE = os.getenv('CASH_ENABLE')
